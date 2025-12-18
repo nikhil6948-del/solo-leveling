@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Solo Leveling | Shadow Monarch System</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
+
+<style>
+:root{
+  --neon:#00e5ff;
+  --dark:#010409;
+  --panel:rgba(10,15,20,.92);
+  --success:#2cff8f;
+  --danger:#ff3b3b;
+}
+
+*{margin:0;padding:0;box-sizing:border-box;font-family:Orbitron}
+
+body{
+  background:url("https://wallpapercave.com/wp/wp10972088.jpg") center/cover fixed;
+  color:var(--neon);
+  min-height:100vh;
+}
+body::before{
+  content:"";
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,.78);
+  z-index:-1;
+}
+
+/* HEADER */
+header{text-align:center;padding:30px}
+header h1{text-shadow:0 0 20px var(--neon)}
+header p{opacity:.8}
+
+/* LAYOUT */
+.container{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
+  gap:20px;
+  width:92%;
+  max-width:1200px;
+  margin:auto;
+}
+
+/* PANEL */
+.panel{
+  background:var(--panel);
+  border:1px solid var(--neon);
+  border-radius:14px;
+  padding:20px;
+  box-shadow:0 0 30px rgba(0,229,255,.2);
+  position:relative;
+}
+.panel img{
+  width:100%;
+  border-radius:10px;
+  margin-bottom:10px;
+}
+
+/* EXP BAR */
+.exp-bar{
+  background:#111;
+  border-radius:10px;
+  overflow:hidden;
+  height:14px;
+  margin:10px 0;
+}
+.exp-fill{
+  height:100%;
+  width:0%;
+  background:linear-gradient(90deg,var(--success),var(--neon));
+  transition:.4s;
+}
+
+/* BUTTON */
+button{
+  width:100%;
+  margin-top:10px;
+  padding:12px;
+  background:transparent;
+  color:var(--neon);
+  border:1px solid var(--neon);
+  border-radius:8px;
+  cursor:pointer;
+}
+button:hover{background:var(--neon);color:black}
+
+/* LOCK */
+.lock{
+  position:absolute;
+  inset:0;
+  background:rgba(0,0,0,.85);
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  align-items:center;
+  border-radius:14px;
+}
+.lock h3{color:#fff;margin-bottom:10px}
+
+/* FLASH */
+.flash{
+  animation:flash .5s;
+}
+@keyframes flash{
+  0%{background:white}
+  100%{background:transparent}
+}
+
+footer{text-align:center;margin:40px 0;color:#aaa;font-size:.8rem}
+</style>
+</head>
+
+<body>
+
+<header>
+<h1>SOLO LEVELING SYSTEM</h1>
+<p>Arise — Train. Level Up. Become Monarch.</p>
+</header>
+
+<main class="container">
+
+<!-- STATUS -->
+<section class="panel">
+<img src="https://wallpapercave.com/wp/wp10972135.jpg">
+<h2>Status</h2>
+<p id="level">Level: 1</p>
+<p id="rank">Rank: E</p>
+
+<div class="exp-bar"><div class="exp-fill" id="expFill"></div></div>
+<p id="expText">EXP: 0%</p>
+
+<button onclick="train()">Train ⚔️</button>
+</section>
+
+<!-- DAILY TASK -->
+<section class="panel">
+<h2>Daily Training</h2>
+<ul id="tasks"></ul>
+</section>
+
+<!-- LOCKED PANEL -->
+<section class="panel">
+<h2>Advanced System</h2>
+<p>Shadow Army • Dungeons • Titles</p>
+
+<div class="lock" id="lock">
+<h3>🔒 SYSTEM LOCKED</h3>
+<p>Unlock Full System</p>
+<button onclick="unlock()">Unlock Now</button>
+</div>
+</section>
+
+</main>
+
+<footer>© 2025 Solo Leveling System</footer>
+
+<!-- AUDIO -->
+<audio id="levelup" src="https://assets.mixkit.co/sfx/preview/mixkit-game-level-completed-2059.mp3"></audio>
+
+<script>
+let level = +localStorage.getItem("level") || 1;
+let exp = +localStorage.getItem("exp") || 0;
+let unlocked = localStorage.getItem("unlock")==="true";
+
+const ranks=["E","D","C","B","A","S","SHADOW MONARCH"];
+
+const workouts=[
+["100 Push-ups","100 Sit-ups","10 km Run"],
+["150 Squats","50 Pull-ups","Plank 2 min"],
+["200 Crunches","Jump Rope 500x"],
+["100 Burpees","200 Lunges"],
+["Core Training","Shadow Boxing"],
+["Extreme Training"],
+["Rest & Meditation"]
+];
+
+function rankCalc(){
+  return ranks[Math.min(Math.floor(level/5),ranks.length-1)];
+}
+
+function train(){
+  exp+=20;
+  if(exp>=100){
+    exp=0;
+    level++;
+    document.body.classList.add("flash");
+    document.getElementById("levelup").play();
+    setTimeout(()=>document.body.classList.remove("flash"),200);
+  }
+  save();
+  update();
+}
+
+function update(){
+  document.getElementById("level").innerText=`Level: ${level}`;
+  document.getElementById("rank").innerText=`Rank: ${rankCalc()}`;
+  document.getElementById("expText").innerText=`EXP: ${exp}%`;
+  document.getElementById("expFill").style.width=exp+"%";
+  if(unlocked)document.getElementById("lock").style.display="none";
+}
+
+function save(){
+  localStorage.setItem("level",level);
+  localStorage.setItem("exp",exp);
+}
+
+function unlock(){
+  unlocked=true;
+  localStorage.setItem("unlock","true");
+  update();
+  alert("SYSTEM UNLOCKED ⚡");
+}
+
+document.getElementById("tasks").innerHTML=
+workouts[new Date().getDay()%7].map(t=>`<li>☑️ ${t}</li>`).join("");
+
+update();
+</script>
+
+</body>
+</html>

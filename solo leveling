@@ -1,11 +1,17 @@
 <!DOCTYPE html>
 <html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Solo Leveling System</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+<!-- PWA -->
 <link rel="manifest" href="manifest.json">
 <link rel="icon" href="icon-192.png">
 <link rel="apple-touch-icon" href="icon-512.png">
-<meta charset="UTF-8">
-<title>Solo Leveling | Shadow Monarch System</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#00e5ff">
+
+<!-- FONT -->
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
 
 <style>
@@ -14,7 +20,6 @@
   --dark:#010409;
   --panel:rgba(10,15,20,.92);
   --success:#2cff8f;
-  --danger:#ff3b3b;
 }
 
 *{margin:0;padding:0;box-sizing:border-box;font-family:Orbitron}
@@ -28,16 +33,13 @@ body::before{
   content:"";
   position:fixed;
   inset:0;
-  background:rgba(0,0,0,.78);
+  background:rgba(0,0,0,.8);
   z-index:-1;
 }
 
-/* HEADER */
 header{text-align:center;padding:30px}
 header h1{text-shadow:0 0 20px var(--neon)}
-header p{opacity:.8}
 
-/* LAYOUT */
 .container{
   display:grid;
   grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
@@ -47,7 +49,6 @@ header p{opacity:.8}
   margin:auto;
 }
 
-/* PANEL */
 .panel{
   background:var(--panel);
   border:1px solid var(--neon);
@@ -56,18 +57,12 @@ header p{opacity:.8}
   box-shadow:0 0 30px rgba(0,229,255,.2);
   position:relative;
 }
-.panel img{
-  width:100%;
-  border-radius:10px;
-  margin-bottom:10px;
-}
 
-/* EXP BAR */
 .exp-bar{
+  height:14px;
   background:#111;
   border-radius:10px;
   overflow:hidden;
-  height:14px;
   margin:10px 0;
 }
 .exp-fill{
@@ -77,124 +72,92 @@ header p{opacity:.8}
   transition:.4s;
 }
 
-/* BUTTON */
 button{
   width:100%;
-  margin-top:10px;
   padding:12px;
+  margin-top:10px;
   background:transparent;
   color:var(--neon);
   border:1px solid var(--neon);
   border-radius:8px;
-  cursor:pointer;
 }
 button:hover{background:var(--neon);color:black}
 
-/* LOCK */
 .lock{
   position:absolute;
   inset:0;
-  background:rgba(0,0,0,.85);
+  background:rgba(0,0,0,.88);
   display:flex;
   flex-direction:column;
   justify-content:center;
   align-items:center;
   border-radius:14px;
-}
-.lock h3{color:#fff;margin-bottom:10px}
-
-/* FLASH */
-.flash{
-  animation:flash .5s;
-}
-@keyframes flash{
-  0%{background:white}
-  100%{background:transparent}
+  text-align:center;
 }
 
-footer{text-align:center;margin:40px 0;color:#aaa;font-size:.8rem}
+footer{text-align:center;color:#aaa;margin:40px 0;font-size:.8rem}
 </style>
 </head>
 
 <body>
 
 <header>
-<h1>SOLO LEVELING SYSTEM</h1>
-<p>Arise — Train. Level Up. Become Monarch.</p>
+  <h1>SOLO LEVELING SYSTEM</h1>
+  <p>Train • Level Up • Become the Shadow Monarch</p>
 </header>
 
 <main class="container">
 
 <!-- STATUS -->
 <section class="panel">
-<img src="https://wallpapercave.com/wp/wp10972135.jpg">
-<h2>Status</h2>
-<p id="level">Level: 1</p>
-<p id="rank">Rank: E</p>
+  <h2>Status</h2>
+  <p id="level">Level: 1</p>
+  <p id="rank">Rank: E</p>
 
-<div class="exp-bar"><div class="exp-fill" id="expFill"></div></div>
-<p id="expText">EXP: 0%</p>
+  <div class="exp-bar">
+    <div class="exp-fill" id="expFill"></div>
+  </div>
+  <p id="expText">EXP: 0%</p>
 
-<button onclick="train()">Train ⚔️</button>
+  <button onclick="train()">Train ⚔️</button>
 </section>
 
-<!-- DAILY TASK -->
+<!-- DAILY TASKS -->
 <section class="panel">
-<h2>Daily Training</h2>
-<ul id="tasks"></ul>
+  <h2>Daily Training</h2>
+  <ul id="tasks"></ul>
 </section>
 
-<!-- LOCKED PANEL -->
+<!-- PREMIUM -->
 <section class="panel">
-<h2>Advanced System</h2>
-<p>Shadow Army • Dungeons • Titles</p>
+  <h2>Advanced System</h2>
+  <p>Dungeons • Shadow Army • Titles</p>
 
-<div class="lock" id="lock">
-<h3>🔒 SYSTEM LOCKED</h3>
-<p>Unlock Full System</p>
-<button onclick="<div id="paypal-button-container"></div>
+  <div class="lock" id="lock">
+    <h3>🔒 Locked</h3>
+    <p>Unlock Full System</p>
 
-<script src="https://www.paypal.com/sdk/js?client-id=K3Z5WM44HT45U&currency=USD"></script>
-
-<script>
-paypal.Buttons({
-  createOrder: (data, actions) => {
-    return actions.order.create({
-      purchase_units: [{
-        amount: { value: "5.00" }
-      }]
-    });
-  },
-  onApprove: (data, actions) => {
-    return actions.order.capture().then(details => {
-      localStorage.setItem("unlock", "true");
-      alert("SYSTEM UNLOCKED ⚡ Welcome Shadow Monarch!");
-      location.reload();
-    });
-  }
-}).render('#paypal-button-container');
-</script>
-">Unlock Now</button>
-</div>
+    <!-- PAYPAL -->
+    <div id="paypal-button-container"></div>
+  </div>
 </section>
 
 </main>
 
 <footer>© 2025 Solo Leveling System</footer>
 
-<!-- AUDIO -->
-<audio id="levelup" src="https://assets.mixkit.co/sfx/preview/mixkit-game-level-completed-2059.mp3"></audio>
+<!-- PAYPAL -->
+<script src="https://www.paypal.com/sdk/js?client-id=K3Z5WM44HT45U&currency=USD"></script>
 
 <script>
 let level = +localStorage.getItem("level") || 1;
 let exp = +localStorage.getItem("exp") || 0;
-let unlocked = localStorage.getItem("unlock")==="true";
+let unlocked = localStorage.getItem("unlock") === "true";
 
 const ranks=["E","D","C","B","A","S","SHADOW MONARCH"];
-
 const workouts=[
 ["100 Push-ups","100 Sit-ups","10 km Run"],
-["150 Squats","50 Pull-ups","Plank 2 min"],
+["150 Squats","50 Pull-ups"],
 ["200 Crunches","Jump Rope 500x"],
 ["100 Burpees","200 Lunges"],
 ["Core Training","Shadow Boxing"],
@@ -211,12 +174,8 @@ function train(){
   if(exp>=100){
     exp=0;
     level++;
-    document.body.classList.add("flash");
-    document.getElementById("levelup").play();
-    setTimeout(()=>document.body.classList.remove("flash"),200);
   }
-  save();
-  update();
+  save(); update();
 }
 
 function update(){
@@ -224,7 +183,7 @@ function update(){
   document.getElementById("rank").innerText=`Rank: ${rankCalc()}`;
   document.getElementById("expText").innerText=`EXP: ${exp}%`;
   document.getElementById("expFill").style.width=exp+"%";
-  if(unlocked)document.getElementById("lock").style.display="none";
+  if(unlocked) document.getElementById("lock").style.display="none";
 }
 
 function save(){
@@ -232,17 +191,27 @@ function save(){
   localStorage.setItem("exp",exp);
 }
 
-function unlock(){
-  unlocked=true;
-  localStorage.setItem("unlock","true");
-  update();
-  alert("SYSTEM UNLOCKED ⚡");
-}
+paypal.Buttons({
+  createOrder:(d,a)=>a.order.create({
+    purchase_units:[{amount:{value:"5.00"}}]
+  }),
+  onApprove:(d,a)=>a.order.capture().then(()=>{
+    localStorage.setItem("unlock","true");
+    alert("SYSTEM UNLOCKED ⚡");
+    location.reload();
+  })
+}).render('#paypal-button-container');
 
-document.getElementById("tasks").innerHTML=
+document.getElementById("tasks").innerHTML =
 workouts[new Date().getDay()%7].map(t=>`<li>☑️ ${t}</li>`).join("");
 
 update();
+</script>
+
+<script>
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('service-worker.js');
+}
 </script>
 
 </body>

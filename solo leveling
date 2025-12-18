@@ -150,7 +150,29 @@ footer{text-align:center;margin:40px 0;color:#aaa;font-size:.8rem}
 <div class="lock" id="lock">
 <h3>🔒 SYSTEM LOCKED</h3>
 <p>Unlock Full System</p>
-<button onclick="unlock()">Unlock Now</button>
+<button onclick="<div id="paypal-button-container"></div>
+
+<script src="https://www.paypal.com/sdk/js?client-id=K3Z5WM44HT45U&currency=USD"></script>
+
+<script>
+paypal.Buttons({
+  createOrder: (data, actions) => {
+    return actions.order.create({
+      purchase_units: [{
+        amount: { value: "5.00" }
+      }]
+    });
+  },
+  onApprove: (data, actions) => {
+    return actions.order.capture().then(details => {
+      localStorage.setItem("unlock", "true");
+      alert("SYSTEM UNLOCKED ⚡ Welcome Shadow Monarch!");
+      location.reload();
+    });
+  }
+}).render('#paypal-button-container');
+</script>
+">Unlock Now</button>
 </div>
 </section>
 

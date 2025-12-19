@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
+<meta charset="UTF-8">
 <title>Solo Leveling System</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <!-- PWA -->
 <link rel="manifest" href="manifest.json">
@@ -81,18 +81,26 @@ button{
   border:1px solid var(--neon);
   border-radius:8px;
 }
+
 button:hover{background:var(--neon);color:black}
 
 .lock{
   position:absolute;
   inset:0;
-  background:rgba(0,0,0,.88);
+  background:rgba(0,0,0,.9);
   display:flex;
   flex-direction:column;
   justify-content:center;
   align-items:center;
   border-radius:14px;
   text-align:center;
+  padding:20px;
+}
+
+.price{
+  font-size:1.2rem;
+  margin:10px 0;
+  color:#fff;
 }
 
 footer{text-align:center;color:#aaa;margin:40px 0;font-size:.8rem}
@@ -128,17 +136,22 @@ footer{text-align:center;color:#aaa;margin:40px 0;font-size:.8rem}
   <ul id="tasks"></ul>
 </section>
 
-<!-- PREMIUM -->
+<!-- SUBSCRIPTIONS -->
 <section class="panel">
-  <h2>Advanced System</h2>
-  <p>Dungeons • Shadow Army • Titles</p>
+  <h2>Unlock System</h2>
+  <p>Choose your path, Hunter.</p>
 
   <div class="lock" id="lock">
-    <h3>🔒 Locked</h3>
-    <p>Unlock Full System</p>
 
-    <!-- PAYPAL -->
-    <div id="paypal-button-container"></div>
+    <div class="price">Bronze – $3 (Basic Unlock)</div>
+    <div id="paypal-bronze"></div>
+
+    <div class="price">Silver – $7 (Advanced System)</div>
+    <div id="paypal-silver"></div>
+
+    <div class="price">Gold – $15 (Shadow Monarch)</div>
+    <div id="paypal-gold"></div>
+
   </div>
 </section>
 
@@ -146,13 +159,13 @@ footer{text-align:center;color:#aaa;margin:40px 0;font-size:.8rem}
 
 <footer>© 2025 Solo Leveling System</footer>
 
-<!-- PAYPAL -->
+<!-- PAYPAL SDK -->
 <script src="https://www.paypal.com/sdk/js?client-id=K3Z5WM44HT45U&currency=USD"></script>
 
 <script>
 let level = +localStorage.getItem("level") || 1;
 let exp = +localStorage.getItem("exp") || 0;
-let unlocked = localStorage.getItem("unlock") === "true";
+let unlocked = localStorage.getItem("unlock")==="true";
 
 const ranks=["E","D","C","B","A","S","SHADOW MONARCH"];
 const workouts=[
@@ -191,27 +204,30 @@ function save(){
   localStorage.setItem("exp",exp);
 }
 
-paypal.Buttons({
-  createOrder:(d,a)=>a.order.create({
-    purchase_units:[{amount:{value:"5.00"}}]
-  }),
-  onApprove:(d,a)=>a.order.capture().then(()=>{
-    localStorage.setItem("unlock","true");
-    alert("SYSTEM UNLOCKED ⚡");
-    location.reload();
-  })
-}).render('#paypal-button-container');
+function unlockSystem(){
+  localStorage.setItem("unlock","true");
+  alert("SYSTEM UNLOCKED ⚡");
+  location.reload();
+}
+
+/* PAYPAL BUTTONS */
+function paypalButton(id, amount){
+  paypal.Buttons({
+    createOrder:(d,a)=>a.order.create({
+      purchase_units:[{amount:{value:amount}}]
+    }),
+    onApprove:(d,a)=>a.order.capture().then(unlockSystem)
+  }).render(id);
+}
+
+paypalButton('#paypal-bronze','3.00');
+paypalButton('#paypal-silver','7.00');
+paypalButton('#paypal-gold','15.00');
 
 document.getElementById("tasks").innerHTML =
 workouts[new Date().getDay()%7].map(t=>`<li>☑️ ${t}</li>`).join("");
 
 update();
-</script>
-
-<script>
-if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('service-worker.js');
-}
 </script>
 
 </body>

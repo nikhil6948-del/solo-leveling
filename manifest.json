@@ -1,7 +1,7 @@
 {
   "name": "Solo Leveling System",
   "short_name": "SoloSystem",
-  "description": "Train like a Shadow Monarch. Level up your real life.",
+  "description": "Train like Sung Jin-Woo. Level up your real life.",
   "start_url": "/",
   "scope": "/",
   "display": "standalone",
